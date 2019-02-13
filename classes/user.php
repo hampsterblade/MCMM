@@ -1,13 +1,47 @@
 <?php
+require_once('configuration.php');
 class user
 {
+  function __contruct()
+  {
+    if isset($_SESSION['id'])
+    {
+      $id = $_SESSION['id'];
+      $configuration=new configuration;
+      $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+      if ($mysqli->connect_errno)
+      {
+        echo "Sorry, this website is experiencing problems.";
+        exit;
+      }
+      $sql = "SELECT id, user, level FROM users WHERE id = $id";
+      if (!$result = $mysqli->query($sql))
+      {
+          echo "Sorry, the website is experiencing problems.";
+          exit;
+      }
+      if ($result->num_rows === 0)
+      {
+      exit;
+      }
+      $status = $result->fetch_assoc();
+      $id = $status['id'];
+      $username = $status['name'];
+      $level = $status['level'];
+      $logged_in = true;
+    }
+    else
+    {
+      $logged_in = false;
+    }
+  }
   function is_logged_in()
   {
-    //returns true if a user is logged in.
+    return $logged_in;
   }
   function get_username()
   {
-    //returns the username
+    return $username;
   }
   function get_permission($privelege)
   {
@@ -25,37 +59,126 @@ class user
   {
     //returns the number of packs a user controls.
   }
-  function login($login, $password)
+  function login($un, $pw)
   {
-    //logs the user in.
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
+    $sql = "SELECT id, user, level FROM users WHERE password = $pw AND username=$un";
+    if (!$result = $mysqli->query($sql))
+    {
+        echo "Sorry, the website is experiencing problems.";
+        exit;
+    }
+    if ($result->num_rows === 0)
+    {
+    return false
+    exit;
+    }
+    $status = $result->fetch_assoc();
+    $id = $status['id'];
+    $username = $status['name'];
+    $level = $status['level'];
+    $logged_in = true;
+    return true;
   }
   function logout()
   {
-    //logs the user out.
+    session_destroy();
+    return true;
   }
-  function change_password($old, $new)
+  function change_password($old, $new, $idnum=$id)
   {
-    //change the password.
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
+    if($idnum == $id)
+    {
+    $sql = "UPDATE users SET password = $new WHERE id = $idnum AND password = $old";
+    }
+    else
+    {
+      $sql = "UPDATE users SET password = $new WHERE id = $idnum";
+    }
+    if (!$result = $mysqli->query($sql))
+    {
+        echo "Sorry, the website is experiencing problems.";
+        exit;
+    }
   }
-  function change_permission($level, $privelege, $val)
+  function change_permission($lvl, $privelege, $val)
   {
-    //changes a permission
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
   }
-  function change_mp_perm($level, $privelege, $val)
+  function change_mp_perm($lvl, $privelege, $val)
   {
-    //changes a modpack permission
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
   }
   function change_max_packs($num)
   {
-    //set max number of mod packs
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
   }
-  function delete()
+  function delete($idnum)
   {
-    //removes the user.
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
+    $sql = "DELETE FROM users WHERE id = $idnum";
+    if (!$result = $mysqli->query($sql))
+    {
+        echo "Sorry, the website is experiencing problems.";
+        exit;
+    }
   }
-  function create($username, $password, $level)
+  function create($un, $pw, $lvl)
   {
-    //creates a user.
+    $configuration=new configuration;
+    $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
+    if ($mysqli->connect_errno)
+    {
+      echo "Sorry, this website is experiencing problems.";
+      exit;
+    }
+    $sql = "INSERT INTO users (name, level, password) VALUES($un, $lvl, $pw)";
+    if (!$result = $mysqli->query($sql))
+    {
+        echo "Sorry, the website is experiencing problems.";
+        exit;
+    }
   }
+  private $logged_in;
+  private $id;
+  private $username;
+  private $level;
 }
 ?>
