@@ -56,12 +56,13 @@
           exit;
       }
     }
-    function set($set_parent, $set_date, $set_url, $set_mc_ver)
+    function set($set_parent, $set_date, $set_url, $set_mc_ver, $set_version)
     {
       $parent = $set_parent;
       $date = $set_date;
       $url = $set_url;
       $mc_ver = $set_mc_ver;
+      $version = $set_version;
     }
     function is_same($com_parent, $com_date, $com_url, $com_mc_ver, $com_version)
     {
