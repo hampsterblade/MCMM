@@ -15,6 +15,14 @@
     }
     function get_file_path($id)
     {
+
+    }
+    function get_file_name($id)
+    {
+
+    }
+    function get_config_list($parent)
+    {
       
     }
   }
