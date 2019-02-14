@@ -23,7 +23,11 @@
     }
     function get_config_list($parent)
     {
-      
+
+    }
+    function get_forge_path($id)
+    {
+
     }
   }
 ?>
