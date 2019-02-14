@@ -16,6 +16,7 @@ class source
       $mod=$components[2];
     }
     $export_url = 'https://minecraft.curseforge.com/projects/'.$mod;
+    return $export_url;
   }
   function get_num_releases($id)
   {
@@ -55,7 +56,7 @@ class source
     $list= array('pages' => $page, 'total' => $total);
     return $list;
   }
-  function get_info($id, $page_num=1, $initialize=false)
+  function get_info($id, $page_num=1, $initialize)
   {
     $configuration=new configuration;
     $mysqli = new mysqli($configuration->db_address, $configuration->db_username, $configuration->db_password, $configuration->database);
